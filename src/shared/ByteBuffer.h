@@ -74,7 +74,7 @@ class ByteBuffer
         ByteBuffer(ByteBuffer const& buf): _rpos(buf._rpos), _wpos(buf._wpos), _storage(buf._storage) { }
 
         // move constructor
-        ByteBuffer(ByteBuffer&& buf) : _rpos(buf._rpos), _wpos(buf._wpos), _storage(std::move(buf._storage)) {}
+        /*ByteBuffer(ByteBuffer&& buf) : _rpos(buf._rpos), _wpos(buf._wpos), _storage(std::move(buf._storage)) {}
 
         // move operator
         ByteBuffer& operator=(ByteBuffer&& rhs)
@@ -83,7 +83,7 @@ class ByteBuffer
             _wpos = rhs._wpos;
             _storage = std::move(rhs._storage);
             return *this;
-        }
+        }*/
 
         void clear()
         {

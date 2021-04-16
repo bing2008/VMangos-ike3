@@ -36,21 +36,28 @@ class WorldPacket : public ByteBuffer
         }
         explicit WorldPacket(uint16 opcode, size_t res=200) : ByteBuffer(res), m_opcode(opcode), m_recvdTime(0) { }
                                                             // copy constructor
-        WorldPacket(WorldPacket const& packet)              : ByteBuffer(packet), m_opcode(packet.m_opcode), m_recvdTime(0)
+        //WorldPacket(WorldPacket const& packet)              : ByteBuffer(packet), m_opcode(packet.m_opcode), m_recvdTime(0)
+        WorldPacket(const WorldPacket& packet)                : ByteBuffer(packet), m_opcode(packet.m_opcode), m_recvdTime(0)
         {
         }
 
-        WorldPacket(WorldPacket&& packet) : ByteBuffer(std::move(packet)), m_opcode(packet.m_opcode), m_recvdTime(packet.m_recvdTime)
+        //WorldPacket(WorldPacket&& packet) : ByteBuffer(std::move(packet)), m_opcode(packet.m_opcode), m_recvdTime(packet.m_recvdTime)
+        /*WorldPacket(WorldPacket&& packet) : ByteBuffer(packet), m_opcode(packet.m_opcode), m_recvdTime(packet.m_recvdTime)
         {
-        }
+        }*/
 
-        WorldPacket& operator=(WorldPacket const& rhs)
+        // copy constructor
+        //WorldPacket(const WorldPacket& packet) : ByteBuffer(packet), m_opcode(packet.m_opcode), m_recvdTime(packet.m_recvdTime)
+        //{
+        //}
+
+        /*WorldPacket& operator=(WorldPacket const& rhs)
         {
             m_opcode = rhs.m_opcode;
             m_recvdTime = rhs.m_recvdTime;
             //ByteBuffer::operator=(std::move(rhs));
             return *this;
-        }
+        }*/
 
         void Initialize(uint16 opcode, size_t newres=200)
         {
