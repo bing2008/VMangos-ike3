@@ -359,6 +359,11 @@ bool WorldSession::Update(PacketFilter& updater)
     if (m_Socket && !m_Socket->IsClosed() && m_warden)
         m_warden->Update();
 
+#ifdef ENABLE_PLAYERBOTS
+    if (GetPlayer() && GetPlayer()->GetPlayerbotMgr())
+        GetPlayer()->GetPlayerbotMgr()->UpdateSessions(0);
+#endif
+
     //check if we are safe to proceed with logout
     //logout procedure should happen only in World::UpdateSessions() method!!!
     if (updater.ProcessLogout())
@@ -474,6 +479,10 @@ bool WorldSession::Update(PacketFilter& updater)
 
 bool WorldSession::CanProcessPackets() const
 {
+#ifdef ENABLE_PLAYERBOTS
+    if (!sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId()))
+        return true;
+#endif
     return ((m_Socket && !m_Socket->IsClosed()) || (_player && sPlayerBotMgr.IsChatBot(_player->GetGUIDLow())));
 }
 
@@ -651,11 +660,14 @@ bool WorldSession::UpdateDisconnected(uint32 diff)
 void WorldSession::HandleBotPackets()
 {
     WorldPacket* packet;
-    while (_recvQueue[6].next(packet))
+    for (int i = 0; i < PACKET_PROCESS_MAX_TYPE; i++)
     {
-        OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
-        (this->*opHandle.handler)(*packet);
-        delete packet;
+        while (_recvQueue[i].next(packet))
+        {
+            OpcodeHandler const& opHandle = opcodeTable[packet->GetOpcode()];
+            (this->*opHandle.handler)(*packet);
+            delete packet;
+        }
     }
 }
 #endif

@@ -88,6 +88,7 @@
 
 #ifdef ENABLE_PLAYERBOTS
 #include "playerbot.h"
+#include "PlayerbotAIConfig.h"
 #endif
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
@@ -619,6 +620,11 @@ Player::Player(WorldSession* session) : Unit(),
     rai = NULL;
     // EJ auto fish
     fishing = false;
+
+#ifdef ENABLE_PLAYERBOTS
+    m_playerbotAI = NULL;
+    m_playerbotMgr = NULL;
+#endif
 }
 
 Player::~Player()

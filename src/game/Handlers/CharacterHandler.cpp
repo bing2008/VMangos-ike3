@@ -107,7 +107,8 @@ public:
 void PlayerbotHolder::AddPlayerBot(uint64 playerGuid, uint32 masterAccount)
 {
     // has bot already been added?
-    Player* bot = sObjectMgr.GetPlayer(ObjectGuid(playerGuid));
+    //Player* bot = sObjectMgr.GetPlayer(ObjectGuid(playerGuid));
+    Player* bot = sObjectAccessor.FindPlayer(playerGuid);
 
     if (bot && bot->IsInWorld())
         return;
@@ -122,7 +123,7 @@ void PlayerbotHolder::AddPlayerBot(uint64 playerGuid, uint32 masterAccount)
         delete holder;                                      // delete all unprocessed queries
         return;
     }
-    CharacterDatabase.DelayQueryHolder(this, &PlayerbotHolder::HandlePlayerBotLoginCallback, holder);
+    CharacterDatabase.DelayQueryHolderUnsafe(this, &PlayerbotHolder::HandlePlayerBotLoginCallback, holder);
 }
 
 void PlayerbotHolder::HandlePlayerBotLoginCallback(QueryResult * dummy, SqlQueryHolder * holder)
@@ -251,8 +252,8 @@ public:
         {
             player->SetPlayerbotMgr(new PlayerbotMgr(player));
             player->GetPlayerbotMgr()->OnPlayerLogin(player);
-            sRandomPlayerbotMgr.OnPlayerLogin(player);
         }
+        sRandomPlayerbotMgr.OnPlayerLogin(player);
 #endif
     }
 } chrHandler;
@@ -595,7 +596,10 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
     // The following fixes a crash. Use case:
     // Session1 created, requests login, kicked.
     // Session2 created, requests login, and receives 2 login callback.
-    if (GetPlayer() || !m_playerLoading)
+    if (sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId()))
+        m_playerLoading = true;
+    if ((GetPlayer() && !sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId())) || !m_playerLoading)
+    //if ((GetPlayer() && !GetPlayer()->GetPlayerbotAI()) || (!m_playerLoading && (GetPlayer() && !GetPlayer()->GetPlayerbotAI())))
     {
         sLog.outInfo("[CRASH] HandlePlayerLogin on session %u with player %s [loading=%u]", GetAccountId(), GetPlayerName(), m_playerLoading);
         delete holder;
@@ -761,7 +765,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
         sMapMgr.ExecuteSingleDelayedTeleport(pCurrChar);
     }
 
-    if (alreadyOnline)
+    if (alreadyOnline && !sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId()))
         pCurrChar->GetMap()->ExistingPlayerLogin(pCurrChar); // SendInitSelf ...
     else
         sObjectAccessor.AddObject(pCurrChar);
