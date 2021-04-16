@@ -639,11 +639,9 @@ include_directories(
   ${ACE_INCLUDE_DIR}
   ${OPENSSL_INCLUDE_DIR}
   ${ZLIB_INCLUDE_DIRS}
-if(PLAYERBOTS)
   ${CMAKE_SOURCE_DIR}/src/modules/Bots
   ${CMAKE_SOURCE_DIR}/src/modules/Bots/playerbot
   ${CMAKE_SOURCE_DIR}/src/modules/Bots/ahbot
-endif()
 )
 
 if(WIN32)

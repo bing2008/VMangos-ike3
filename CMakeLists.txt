@@ -81,12 +81,12 @@ message(STATUS
 ) # TODO: PLATFORM: Sets the architecture for compile (X86,X64)
 
 # Override configuration-types - we don't use anything else than debug and release
-if(CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_CONFIGURATION_TYPES Release Debug)
-  set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
-    "Reset the configurations to what we need"
-    FORCE)
-endif()
+# if(CMAKE_CONFIGURATION_TYPES)
+#  set(CMAKE_CONFIGURATION_TYPES Release Debug)
+#  set(CMAKE_CONFIGURATION_TYPES "${CMAKE_CONFIGURATION_TYPES}" CACHE STRING
+#    "Reset the configurations to what we need"
+#    FORCE)
+# endif()
 
 # Find out what system we use to include the needed libs
 if(WIN32)
@@ -404,7 +404,14 @@ if(WIN32)
       ${CMAKE_SOURCE_DIR}/dep/windows/lib/${DEP_ARCH}_debug/libeay32.dll
       ${CMAKE_SOURCE_DIR}/dep/windows/lib/${DEP_ARCH}_debug/libmySQL.dll
     DESTINATION ${LIBS_DIR}
-    CONFIGURATIONS Debug
+    CONFIGURATIONS MinSizeRel
+  )
+  install(
+    FILES
+      ${CMAKE_SOURCE_DIR}/dep/windows/lib/${DEP_ARCH}_debug/libeay32.dll
+      ${CMAKE_SOURCE_DIR}/dep/windows/lib/${DEP_ARCH}_debug/libmySQL.dll
+    DESTINATION ${LIBS_DIR}
+    CONFIGURATIONS RelWithDebInfo
   )
   if(PLATFORM MATCHES X86)
     # Copy dll's Windows needs
