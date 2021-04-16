@@ -129,9 +129,6 @@ struct CharSectionsEntry
     uint32 BaseSection;
     uint32 VariationIndex;
     uint32 ColorIndex;
-    uint32 Type;
-    uint32 Color;
-    uint32 GenType;
     //char* TexturePath[3];
     uint32 Flags;
     inline bool HasFlag(CharSectionFlags flag) const { return (Flags & flag) != 0; }

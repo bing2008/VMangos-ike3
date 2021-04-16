@@ -213,7 +213,7 @@ void LoadDBCStores(std::string const& dataPath)
     for (uint32 i = 0; i < sCharSectionsStore.GetNumRows(); ++i)
         if (CharSectionsEntry const* entry = sCharSectionsStore.LookupEntry(i))
             if (entry->Race && ((1 << (entry->Race - 1)) & RACEMASK_ALL_PLAYABLE) != 0) //ignore Nonplayable races
-                sCharSectionMap.insert({ entry->GenType | (entry->Gender << 8) | (entry->Race << 16), entry });
+                sCharSectionMap.insert({ entry->BaseSection | (entry->Gender << 8) | (entry->Race << 16), entry });
 #endif
 
     LoadDBC(availableDbcLocales, bar, bad_dbc_files, sAuctionHouseStore,        dbcPath, "AuctionHouse.dbc");
