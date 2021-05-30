@@ -596,8 +596,12 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
     // The following fixes a crash. Use case:
     // Session1 created, requests login, kicked.
     // Session2 created, requests login, and receives 2 login callback.
-    if (sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId()))
-        m_playerLoading = true;
+	PlayerbotLoginQueryHolder* lqh = (PlayerbotLoginQueryHolder*)holder;
+	if (lqh)
+	{
+		m_playerLoading = true;
+	}
+        
     if ((GetPlayer() && !sPlayerbotAIConfig.IsInRandomAccountList(GetAccountId())) || !m_playerLoading)
     //if ((GetPlayer() && !GetPlayer()->GetPlayerbotAI()) || (!m_playerLoading && (GetPlayer() && !GetPlayer()->GetPlayerbotAI())))
     {
